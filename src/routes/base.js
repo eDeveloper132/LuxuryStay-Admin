@@ -1,9 +1,13 @@
 import { Router } from 'express';
-import { protect } from '../middleware/auth.js';
-import { authorize } from '../middleware/authorize.js';
+import path from 'path';
 const router = Router();
 // Admin sab bookings dekh sakta hai
-router.get('/', protect, authorize(['admin']), (req, res) => {
-    res.sendFile('../views/dashboard.html');
+router.get('/', (req, res) => {
+    res.send({
+        message: "Admin Dashboard"
+    });
+});
+router.get('/users', (req, res) => {
+    res.sendFile(path.resolve('public', 'views', 'userManagement.html'));
 });
 export default router;

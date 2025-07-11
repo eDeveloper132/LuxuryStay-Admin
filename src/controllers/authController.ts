@@ -3,12 +3,16 @@ import bcrypt from 'bcrypt';
 import axios from 'axios';
 import { generateToken } from '../utils/jwt.js';
 import IUser from '../interfaces/IUser.js';
+
 const core = process.env.CORE_API_URL;
 
 export const register = async (req: Request, res: Response) => {
   try {
     const { name, email, password } = req.body;
+    console.log('🔐 Registering user:', { name, email });
+
     const hashed = await bcrypt.hash(password, 10);
+    console.log('🧂 Hashed password:', hashed);
 
     const { data: user } = await axios.post<IUser>(
       `${core}/api/usermanagement/`,
@@ -16,24 +20,40 @@ export const register = async (req: Request, res: Response) => {
       { headers: { 'Content-Type': 'application/json' } }
     );
 
-    return res.status(201).json({ token: generateToken(user) });
+    console.log('✅ User registered successfully:', user);
+    return res.status(201)
+    .json({ message: 'Authentication successful' });
   } catch (err: any) {
-    console.error('Register error:', err.response?.data || err.message);
+    console.error('❌ Register error:', err.response?.data || err.message);
     return res.status(500).json({ message: 'Registration failed' });
   }
 };
 
-
 export const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
+  console.log('🔑 Login attempt for email:', email);
 
-  const { data: user } = await axios.get<IUser>(
-    `${core}/api/usermanagement/email/${email}`
-  );
+  try {
+    const { data: user } = await axios.get<IUser>(
+      `${core}/api/usermanagement/email/${email}`
+    );
 
-  if (user && await bcrypt.compare(password, user.password)) {
-    return res.json({ token: generateToken(user) });
+    console.log('👤 User fetched from API:', user);
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    console.log('🔍 Password match:', isMatch);
+
+    if (user && isMatch) {
+      console.log('✅ Login success for:', email);
+      const token = generateToken(user);
+      console.log('🔑 Generated token:', token);
+      return res.status(200).json({ token });
+    }
+
+    console.warn('⚠️ Invalid credentials for:', email);
+    res.status(401).json({ message: 'Invalid credentials' });
+  } catch (err: any) {
+    console.error('❌ Login error:', err.response?.data || err.message);
+    res.status(500).json({ message: 'Login failed' });
   }
-
-  res.status(401).json({ message: 'Invalid credentials' });
 };
