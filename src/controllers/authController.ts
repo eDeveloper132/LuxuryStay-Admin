@@ -35,7 +35,7 @@ export const login = async (req: Request, res: Response) => {
 
   try {
     const { data: user } = await axios.get<IUser>(
-      `${core}/api/usermanagement/email/${email}`
+      `${core}/usermanagement/email/${email}`
     );
 
     console.log('👤 User fetched from API:', user);
@@ -45,9 +45,25 @@ export const login = async (req: Request, res: Response) => {
 
     if (user && isMatch) {
       console.log('✅ Login success for:', email);
+    const id = user._id;
+    const namee = user.name;
+    const emaile = user.email;
+    const role = user.role;
+
+    res.cookie(
+      'user',
+      { id, namee, emaile, role },  // <-- note the _id
+      {
+        httpOnly: false,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 1000 * 60 * 60 * 24 * 7,
+        path: '/',
+      }
+    )
       const token = generateToken(user);
       console.log('🔑 Generated token:', token);
-      return res.status(200).json({ token });
+      return res.status(200).json({ token, user });
     }
 
     console.warn('⚠️ Invalid credentials for:', email);

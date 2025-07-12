@@ -22,15 +22,27 @@ export const login = async (req, res) => {
     const { email, password } = req.body;
     console.log('🔑 Login attempt for email:', email);
     try {
-        const { data: user } = await axios.get(`${core}/api/usermanagement/email/${email}`);
+        const { data: user } = await axios.get(`${core}/usermanagement/email/${email}`);
         console.log('👤 User fetched from API:', user);
         const isMatch = await bcrypt.compare(password, user.password);
         console.log('🔍 Password match:', isMatch);
         if (user && isMatch) {
             console.log('✅ Login success for:', email);
+            const id = user._id;
+            const namee = user.name;
+            const emaile = user.email;
+            const role = user.role;
+            res.cookie('user', { id, namee, emaile, role }, // <-- note the _id
+            {
+                httpOnly: false,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'lax',
+                maxAge: 1000 * 60 * 60 * 24 * 7,
+                path: '/',
+            });
             const token = generateToken(user);
             console.log('🔑 Generated token:', token);
-            return res.status(200).json({ token });
+            return res.status(200).json({ token, user });
         }
         console.warn('⚠️ Invalid credentials for:', email);
         res.status(401).json({ message: 'Invalid credentials' });

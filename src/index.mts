@@ -24,6 +24,10 @@ app.get('/login',redirectIfAuthenticated, (req, res) => {
 app.get('/signup', redirectIfAuthenticated, (req, res) => {
     res.sendFile(path.resolve('public','views','signup.html'));
 });
+app.get('/logout', (req, res) => {
+  res.clearCookie('user');
+  return res.status(200).json({ message: 'Logged out successfully' });
+})
 io.on('connection', socket => {
   console.log('Client connected:', socket.id);
 });

@@ -1,18 +1,32 @@
+const core = process.env.CORE_API_URL;
 export const getStats = async (req, res) => {
     // Call each core endpoint and extract .data
-    const { data: rooms } = await axios.get('/api/rooms/count');
-    const { data: occupied } = await axios.get('/api/rooms/occupied');
-    const { data: todaysBookings } = await axios.get('/api/bookings/today');
-    const { data: revenue } = await axios.get('/api/invoices/sumofrevenue');
+    const rooms = await fetch(`${core}/api/rooms`);
+    const occupied = await fetch(`${core}/api/rooms/occupiedrooms`);
+    const todaysBookings = await fetch(`${core}/api/bookings/todaysbookings`);
+    const revenue = await fetch(`${core}/api/invoices/sumofrevenue`);
+    const roomsData = await rooms.json();
+    const occupiedData = await occupied.json();
+    const todaysBookingsData = await todaysBookings.json();
+    const revenueData = await revenue.json();
     // Return clear numeric fields
     res.json({
-        totalRooms: rooms.total,
-        occupied: occupied.occupied,
-        todaysBookings: todaysBookings.count,
-        revenue: revenue.sum,
+        totalRooms: roomsData,
+        occupiedRooms: occupiedData,
+        todaysBookings: todaysBookingsData,
+        revenue: revenueData
+    });
+};
+export const rooms = async (req, res) => {
+    const response = await fetch(`${core}/api/rooms`);
+    const data = await response.json();
+    console.log(data);
+    res.json({
+        totalRooms: data
     });
 };
 export const users = async (req, res) => {
-    const { data } = await axios.get('/api/usermanagement');
+    const response = await fetch(`${core}/usermanagement`);
+    const data = await response.json();
     res.json(data);
 };
