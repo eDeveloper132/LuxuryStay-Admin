@@ -19,10 +19,10 @@ app.use('/', baseRoutes);
 app.use('/api', dashboardstatsRoutes);
 app.use('/api/auth', authRoutes);
 app.get('/login',redirectIfAuthenticated, (req, res) => {
-    res.sendFile(path.resolve('public','views','signin.html'));
+    res.sendFile(path.resolve('public','auth','signin.html'));
 });
 app.get('/signup', redirectIfAuthenticated, (req, res) => {
-    res.sendFile(path.resolve('public','views','signup.html'));
+    res.sendFile(path.resolve('public','auth','signup.html'));
 });
 app.get('/logout', (req, res) => {
   res.clearCookie('user');

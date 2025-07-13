@@ -15,7 +15,7 @@ export const register = async (req: Request, res: Response) => {
     console.log('🧂 Hashed password:', hashed);
 
     const { data: user } = await axios.post<IUser>(
-      `${core}/api/usermanagement/`,
+      `${core}/usermanagement/`,
       { name, email, password: hashed, role: 'admin' },
       { headers: { 'Content-Type': 'application/json' } }
     );

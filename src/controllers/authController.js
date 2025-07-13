@@ -8,7 +8,7 @@ export const register = async (req, res) => {
         console.log('🔐 Registering user:', { name, email });
         const hashed = await bcrypt.hash(password, 10);
         console.log('🧂 Hashed password:', hashed);
-        const { data: user } = await axios.post(`${core}/api/usermanagement/`, { name, email, password: hashed, role: 'admin' }, { headers: { 'Content-Type': 'application/json' } });
+        const { data: user } = await axios.post(`${core}/usermanagement/`, { name, email, password: hashed, role: 'admin' }, { headers: { 'Content-Type': 'application/json' } });
         console.log('✅ User registered successfully:', user);
         return res.status(201)
             .json({ message: 'Authentication successful' });
