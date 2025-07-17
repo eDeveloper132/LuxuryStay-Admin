@@ -35,80 +35,166 @@
         <a href="/bookings" class="block py-2 px-4 rounded hover:bg-blue-100 text-gray-700">📖 Booking Management</a>
       </nav>
     </aside>
-<!-- Create Room Modal -->
-<div id="createRoomModal" class="fixed inset-0 hidden flex items-center justify-center bg-black bg-opacity-50">
-  <div class="bg-white rounded-2xl shadow-lg w-full max-w-lg p-6 space-y-4">
-    <h3 class="text-2xl font-bold text-blue-600">Create New Room</h3>
-    <form id="createRoomForm" class="space-y-4">
-      
-      <div>
-        <label for="room-number" class="block font-semibold">Room Number</label>
-        <input
-          type="text"
-          id="room-number"
-          name="number"
-          required
-          placeholder="e.g. 101"
-          title="Enter room number"
-          class="w-full px-3 py-2 border rounded"
-        />
-      </div>
 
-      <div>
-        <label for="room-type" class="block font-semibold">Type</label>
-        <select
-          id="room-type"
-          name="type"
-          required
-          title="Select room type"
-          class="w-full px-3 py-2 border rounded"
-        >
-          <option value="">Select type</option>
-          <option value="single">Single</option>
-          <option value="double">Double</option>
-          <option value="suite">Suite</option>
-        </select>
+    <!-- Create Room Modal -->
+    <div id="createRoomModal" class="fixed inset-0 hidden flex items-center justify-center bg-black bg-opacity-50">
+      <div class="bg-white rounded-2xl shadow-lg w-full max-w-lg p-6 space-y-4">
+        <h3 class="text-2xl font-bold text-blue-600">Create New Room</h3>
+        <form id="createRoomForm" class="space-y-4">
+          <div>
+            <label for="room-number" class="block font-semibold">Room Number</label>
+            <input
+              type="text"
+              id="room-number"
+              name="number"
+              required
+              placeholder="e.g. 101"
+              title="Enter room number"
+              class="w-full px-3 py-2 border rounded"
+            />
+          </div>
+          <div>
+            <label for="room-type" class="block font-semibold">Type</label>
+            <select
+              id="room-type"
+              name="type"
+              required
+              title="Select room type"
+              class="w-full px-3 py-2 border rounded"
+            >
+              <option value="">Select type</option>
+              <option value="single">Single</option>
+              <option value="double">Double</option>
+              <option value="suite">Suite</option>
+            </select>
+          </div>
+          <div>
+            <label for="room-price" class="block font-semibold">Price</label>
+            <input
+              type="number"
+              id="room-price"
+              name="price"
+              required
+              placeholder="e.g. 150"
+              title="Enter price"
+              class="w-full px-3 py-2 border rounded"
+            />
+          </div>
+          <div>
+            <label for="room-features" class="block font-semibold">Features (comma separated)</label>
+            <input
+              type="text"
+              id="room-features"
+              name="features"
+              placeholder="e.g. WiFi,AC,TV"
+              title="List of features"
+              class="w-full px-3 py-2 border rounded"
+            />
+          </div>
+          <div class="flex justify-end space-x-2">
+            <button
+              type="button"
+              onclick="closeModal('createRoomModal')"
+              class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+            >Cancel</button>
+            <button
+              type="submit"
+              class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            >Create</button>
+          </div>
+        </form>
       </div>
+    </div>
 
-      <div>
-        <label for="room-price" class="block font-semibold">Price</label>
-        <input
-          type="number"
-          id="room-price"
-          name="price"
-          required
-          placeholder="e.g. 150"
-          title="Enter price"
-          class="w-full px-3 py-2 border rounded"
-        />
+    <!-- Update Room Modal -->
+    <div id="updateRoomModal" class="fixed inset-0 hidden flex items-center justify-center bg-black bg-opacity-50">
+      <div class="bg-white rounded-2xl shadow-lg w-full max-w-lg p-6 space-y-4">
+        <h3 class="text-2xl font-bold text-blue-600">Update Room</h3>
+        <form id="updateRoomForm" class="space-y-4">
+          <input type="hidden" id="update-room-id" name="id" />
+          <div>
+            <label for="update-room-number" class="block font-semibold">Room Number</label>
+            <input
+              type="text"
+              id="update-room-number"
+              name="number"
+              required
+              placeholder="e.g. 101"
+              title="Enter room number"
+              class="w-full px-3 py-2 border rounded"
+            />
+          </div>
+          <div>
+            <label for="update-room-type" class="block font-semibold">Type</label>
+            <select
+              id="update-room-type"
+              name="type"
+              required
+              title="Select room type"
+              class="w-full px-3 py-2 border rounded"
+            >
+              <option value="">Select type</option>
+              <option value="single">Single</option>
+              <option value="double">Double</option>
+              <option value="suite">Suite</option>
+            </select>
+          </div>
+          <div>
+            <label for="update-room-price" class="block font-semibold">Price</label>
+            <input
+              type="number"
+              id="update-room-price"
+              name="price"
+              required
+              placeholder="e.g. 150"
+              title="Enter price"
+              class="w-full px-3 py-2 border rounded"
+            />
+          </div>
+          <div>
+            <label for="update-room-features" class="block font-semibold">Features (comma separated)</label>
+            <input
+              type="text"
+              id="update-room-features"
+              name="features"
+              placeholder="e.g. WiFi,AC,TV"
+              title="List of features"
+              class="w-full px-3 py-2 border rounded"
+            />
+          </div>
+          <div class="flex justify-end space-x-2">
+            <button
+              type="button"
+              onclick="closeModal('updateRoomModal')"
+              class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+            >Cancel</button>
+            <button
+              type="submit"
+              class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+            >Update</button>
+          </div>
+        </form>
       </div>
+    </div>
 
-      <div>
-        <label for="room-features" class="block font-semibold">Features (comma separated)</label>
-        <input
-          type="text"
-          id="room-features"
-          name="features"
-          placeholder="e.g. WiFi,AC,TV"
-          title="List of features"
-          class="w-full px-3 py-2 border rounded"
-        />
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteRoomModal" class="fixed inset-0 hidden flex items-center justify-center bg-black bg-opacity-50">
+      <div class="bg-white rounded-2xl shadow-lg w-96 p-6 space-y-4">
+        <h3 class="text-2xl font-bold text-red-600">Confirm Deletion</h3>
+        <p>Are you sure you want to delete this room? This action cannot be undone.</p>
+        <div class="flex justify-end space-x-2">
+          <button
+            type="button"
+            onclick="closeModal('deleteRoomModal')"
+            class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+          >Cancel</button>
+          <button
+            id="confirmDeleteBtn"
+            class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+          >Delete</button>
+        </div>
       </div>
-
-      <div class="flex justify-end space-x-2">
-        <button
-          type="button"
-          onclick="closeModal('createRoomModal')"
-          class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
-        >Cancel</button>
-        <button
-          type="submit"
-          class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
-        >Create</button>
-      </div>
-    </form>
-  </div>
-</div>
+    </div>
 
     <!-- Main Content -->
     <main class="flex-1 p-4 sm:p-6 overflow-y-auto">
@@ -119,7 +205,6 @@
 
       <!-- Stats Grid -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <!-- Card Template -->
         <div class="bg-white p-5 rounded-xl shadow flex items-center gap-4">
           <div class="flex-1">
             <p class="text-sm text-gray-500">Total Rooms</p>
@@ -129,7 +214,6 @@
             <path d="M4 3h12v2H4V3zm0 4h12v2H4V7zm0 4h12v2H4v-2zm0 4h12v2H4v-2z" />
           </svg>
         </div>
-
         <div class="bg-white p-5 rounded-xl shadow flex items-center gap-4">
           <div class="flex-1">
             <p class="text-sm text-gray-500">Occupied</p>
@@ -139,7 +223,6 @@
             <path d="M5 3v12h10V3H5zm2 2h6v8H7V5z" />
           </svg>
         </div>
-
         <div class="bg-white p-5 rounded-xl shadow flex items-center gap-4">
           <div class="flex-1">
             <p class="text-sm text-gray-500">Today's Bookings</p>
@@ -149,7 +232,6 @@
             <path d="M6 2v2H4v2h2v8H4v2h2v2h4v-2h2v-2H8V6h2V4H8V2H6z" />
           </svg>
         </div>
-
         <div class="bg-white p-5 rounded-xl shadow flex items-center gap-4">
           <div class="flex-1">
             <p class="text-sm text-gray-500">Revenue</p>
@@ -161,341 +243,525 @@
         </div>
       </div>
 
+      <!-- All Rooms Section -->
       <section class="mt-8 bg-white p-6 rounded-2xl shadow">
-<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
-  <!-- Left: Heading -->
-  <div class="flex items-center space-x-2">
-    <h2 class="text-xl font-semibold">All Rooms</h2>
-    <span id="roomBadge"
-          class="inline-flex items-center justify-center px-2 py-1 text-xs font-bold text-white bg-red-500 rounded-full">
-      0
-    </span>
-  </div>
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+          <div class="flex items-center space-x-2">
+            <h2 class="text-xl font-semibold">All Rooms</h2>
+            <span id="roomBadge" class="inline-flex items-center justify-center px-2 py-1 text-xs font-bold text-white bg-red-500 rounded-full">
+              0
+            </span>
+          </div>
+          <div class="flex space-x-2">
+            <button id="createRoomBtn" class="px-2 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700">
+              + Create Room
+            </button>
+            <input id="roomSearch" type="text" placeholder="Search rooms…" class="px-3 py-1 border rounded focus:outline-none focus:ring focus:ring-blue-600" />
+            <button id="roomRefresh" class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700">
+              Refresh
+            </button>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-left">
+            <thead class="bg-gray-100">
+              <tr>
+                <th class="px-4 py-2">#</th>
+                <th class="px-4 py-2">Room No.</th>
+                <th class="px-4 py-2">Type</th>
+                <th class="px-4 py-2">Price</th>
+                <th class="px-4 py-2">Status</th>
+                <th class="px-4 py-2">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="roomTableBody">
+              <!-- JS will inject rows here -->
+            </tbody>
+          </table>
+        </div>
+        <div class="mt-4 flex justify-center items-center space-x-2">
+          <button id="roomPrev" class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">Prev</button>
+          <span id="roomPageInfo" class="px-2 text-gray-700">Page 1 of 1</span>
+          <button id="roomNext" class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">Next</button>
+        </div>
+      </section>
 
+      <!-- Room View Modal -->
+      <div id="roomViewModal" class="fixed inset-0 hidden flex items-center justify-center bg-black bg-opacity-50">
+        <div class="bg-white rounded-2xl shadow-lg w-96 p-6 space-y-4">
+          <h3 class="text-2xl font-bold text-blue-600">Room Details</h3>
+          <p><strong>No.:</strong> <span id="viewNumber"></span></p>
+          <p><strong>Type:</strong> <span id="viewType"></span></p>
+          <p><strong>Price:</strong> <span id="viewPrice"></span> PKR</p>
+          <p><strong>Status:</strong> <span id="viewStatus"></span></p>
+          <p><strong>Created:</strong> <span id="viewCreated"></span></p>
+          <p><strong>Updated:</strong> <span id="viewUpdated"></span></p>
+          <div>
+            <strong>Features:</strong>
+            <ul id="viewFeatures" class="list-disc list-inside text-gray-700"></ul>
+          </div>
+          <div class="flex justify-end">
+            <button class="px-4 py-2 bg-gray-200 rounded-2xl hover:bg-gray-300" onclick="closeModal('roomViewModal')">
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
 
-
-  <!-- Right: Search + Refresh -->
-  <div class="flex space-x-2">
-      <!-- Center: Create Room Button -->
-      <button
-        id="createRoomBtn"
-        class="px-2 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-      >
-        + Create Room
-      </button>
-    <input id="roomSearch"
-           type="text"
-           placeholder="Search rooms…"
-           class="px-3 py-1 border rounded focus:outline-none focus:ring focus:ring-blue-600" />
-    <button id="roomRefresh"
-            class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700">
-      Refresh
-    </button>
-  </div>
-</div>
-
-
-  <div class="overflow-x-auto">
-    <table class="min-w-full text-left">
-      <thead class="bg-gray-100">
-        <tr>
-          <th class="px-4 py-2">#</th>
-          <th class="px-4 py-2">Room No.</th>
-          <th class="px-4 py-2">Type</th>
-          <th class="px-4 py-2">Price</th>
-          <th class="px-4 py-2">Status</th>
-          <th class="px-4 py-2">Actions</th>  <!-- new -->
-        </tr>
-      </thead>
-      <tbody id="roomTableBody">
-        <!-- JS will inject rows here -->
-      </tbody>
-    </table>
-  </div>
-
-  <!-- Pagination -->
-  <div class="mt-4 flex justify-center items-center space-x-2">
-    <button id="roomPrev"
-            class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">
-      Prev
-    </button>
-    <span id="roomPageInfo" class="px-2 text-gray-700">Page 1 of 1</span>
-    <button id="roomNext"
-            class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">
-      Next
-    </button>
-  </div>
-</section>
-
-<div id="roomViewModal"
-     class="fixed inset-0 hidden flex items-center justify-center bg-black bg-opacity-50">
-  <div class="bg-white rounded-2xl shadow-lg w-96 p-6 space-y-4">
-    <h3 class="text-2xl font-bold text-blue-600">Room Details</h3>
-    <p><strong>No.:</strong> <span id="viewNumber"></span></p>
-    <p><strong>Type:</strong> <span id="viewType"></span></p>
-    <p><strong>Price:</strong> ₹<span id="viewPrice"></span></p>
-    <p><strong>Status:</strong> <span id="viewStatus"></span></p>
-    <p><strong>Created:</strong> <span id="viewCreated"></span></p>
-    <p><strong>Updated:</strong> <span id="viewUpdated"></span></p>
-    <div>
-      <strong>Features:</strong>
-      <ul id="viewFeatures" class="list-disc list-inside text-gray-700"></ul>
-    </div>
-    <div class="flex justify-end">
-      <button class="px-4 py-2 bg-gray-200 rounded-2xl hover:bg-gray-300"
-              onclick="closeModal('roomViewModal')">
-        Close
-      </button>
-    </div>
-  </div>
-</div>
+      <!-- Occupied Rooms Section -->
+      <section class="mt-8 bg-white p-6 rounded-2xl shadow">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+          <div class="flex items-center space-x-2">
+            <h2 class="text-xl font-semibold">Occupied Rooms</h2>
+            <span id="occupiedRoomBadge" class="inline-flex items-center justify-center px-2 py-1 text-xs font-bold text-white bg-red-500 rounded-full">
+              0
+            </span>
+          </div>
+          <div class="flex space-x-2">
+            <input id="occupiedRoomSearch" type="text" placeholder="Search occupied rooms…" class="px-3 py-1 border rounded focus:outline-none focus:ring focus:ring-blue-600" />
+            <button id="occupiedRoomRefresh" class="px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700">
+              Refresh
+            </button>
+          </div>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="min-w-full text-left">
+            <thead class="bg-gray-100">
+              <tr>
+                <th class="px-4 py-2">#</th>
+                <th class="px-4 py-2">Room No.</th>
+                <th class="px-4 py-2">Type</th>
+                <th class="px-4 py-2">Price</th>
+                <th class="px-4 py-2">Status</th>
+                <th class="px-4 py-2">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="occupiedRoomTableBody">
+              <!-- JS will inject rows here -->
+            </tbody>
+          </table>
+        </div>
+        <div class="mt-4 flex justify-center items-center space-x-2">
+          <button id="occupiedRoomPrev" class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">Prev</button>
+          <span id="occupiedRoomPageInfo" class="px-2 text-gray-700">Page 1 of 1</span>
+          <button id="occupiedRoomNext" class="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300">Next</button>
+        </div>
+      </section>
     </main>
   </div>
 
   <!-- Footer -->
   <footer class="bg-white text-center p-4 text-sm text-gray-500">
-    &copy; 2025 LuxuryStay Hospitality
+    © 2025 LuxuryStay Hospitality
   </footer>
 
   <!-- JS Scripts -->
-<script>
-  // Room list state
-  let rooms = [], filteredRooms = [], roomPage = 1;
-  const roomPageSize = 8;
-  const adminSocket = window.adminSocket;
+  <script>
+    // Room list state
+    let rooms = [], filteredRooms = [], roomPage = 1;
+    const roomPageSize = 5;
+    const adminSocket = window.adminSocket;
+    let occupiedRooms = [], occupiedFilteredRooms = [], occupiedRoomPage = 1;
+    const occupiedRoomPageSize = 5;
+    let roomToDelete = null;
 
-  // UI refs
-  const badge = document.getElementById('roomBadge');
-  const tbody = document.getElementById('roomTableBody');
-  const searchInput = document.getElementById('roomSearch');
-  const prevBtn = document.getElementById('roomPrev');
-  const nextBtn = document.getElementById('roomNext');
-  const pageInfo = document.getElementById('roomPageInfo');
-  const refreshBtn = document.getElementById('roomRefresh');
+    // UI refs
+    const badge = document.getElementById('roomBadge');
+    const tbody = document.getElementById('roomTableBody');
+    const searchInput = document.getElementById('roomSearch');
+    const prevBtn = document.getElementById('roomPrev');
+    const nextBtn = document.getElementById('roomNext');
+    const pageInfo = document.getElementById('roomPageInfo');
+    const refreshBtn = document.getElementById('roomRefresh');
+    const occupiedBadge = document.getElementById('occupiedRoomBadge');
+    const occupiedTbody = document.getElementById('occupiedRoomTableBody');
+    const occupiedSearchInput = document.getElementById('occupiedRoomSearch');
+    const occupiedPrevBtn = document.getElementById('occupiedRoomPrev');
+    const occupiedNextBtn = document.getElementById('occupiedRoomNext');
+    const occupiedPageInfo = document.getElementById('occupiedRoomPageInfo');
+    const occupiedRefreshBtn = document.getElementById('occupiedRoomRefresh');
 
-  // Modal toggles
-  window.openModal = id => document.getElementById(id).classList.remove('hidden','opacity-0');
-  window.closeModal = id => document.getElementById(id).classList.add('hidden','opacity-0');
+    // Modal toggles
+    window.openModal = id => document.getElementById(id).classList.remove('hidden', 'opacity-0');
+    window.closeModal = id => document.getElementById(id).classList.add('hidden', 'opacity-0');
 
-  // Toggle sidebar & logout
-  document.getElementById('logout')?.addEventListener('click', async () => {
-    try {
-      await fetch('/logout');
-      localStorage.clear();
-      window.location.href = '/login';
-    } catch (error) {
-      console.log("Logout failed:", error);
-      alert("Logout failed. Please try again.");
-    }
-  });
-  document.getElementById('logouti')?.addEventListener('click', async () => {
-    try {
-      await fetch('/logout');
-      localStorage.clear();
-      window.location.href = '/login';
-    } catch (error) {
-      console.log("Logout failed:", error);
-      alert("Logout failed. Please try again.");
-    }
-  });
-  document.getElementById('menuToggle')?.addEventListener('click', () => {
-    document.getElementById('sidebar').classList.toggle('hidden');
-  });
-
-  // Load rooms from API
-  async function loadRooms() {
-    try {
-      const res = await fetch('/api/rooms');
-      if (!res.ok) throw new Error(res.statusText);
-      const { totalRooms } = await res.json();
-      rooms = totalRooms;
-      filteredRooms = [...rooms];
-      roomPage = 1;
-      badge.textContent = rooms.length;
-      renderRooms();
-      updateRoomPagination();
-    } catch (err) {
-      console.error('loadRooms error:', err);
-    }
-  }
-
-  // Render table rows, injecting a View button
-  function renderRooms() {
-    tbody.innerHTML = '';
-    const start = (roomPage - 1) * roomPageSize;
-    const slice = filteredRooms.slice(start, start + roomPageSize);
-    slice.forEach((r, i) => {
-      const idx = start + i + 1;
-      tbody.insertAdjacentHTML('beforeend', `
-        <tr class="${i % 2 ? 'bg-gray-50' : ''}">
-          <td class="px-4 py-2">${idx}</td>
-          <td class="px-4 py-2">${r.number}</td>
-          <td class="px-4 py-2 capitalize">${r.type}</td>
-          <td class="px-4 py-2">${r.price.toLocaleString()} PKR</td>
-          <td class="px-4 py-2 capitalize">${r.status}</td>
-          <td class="px-4 py-2">
-            <button data-id="${r._id}" class="viewBtn px-2 py-1 text-white bg-green-500 rounded hover:bg-green-600">
-              View
-            </button>
-          </td>
-        </tr>
-      `);
+    // Toggle sidebar & logout
+    document.getElementById('logout')?.addEventListener('click', async () => {
+      try {
+        await fetch('/logout');
+        localStorage.clear();
+        window.location.href = '/login';
+      } catch (error) {
+        console.log("Logout failed:", error);
+        alert("Logout failed. Please try again.");
+      }
     });
-    attachRoomHandlers();
-  }
-
-  // Hook View buttons
-  function attachRoomHandlers() {
-    document.querySelectorAll('.viewBtn').forEach(btn => {
-      btn.onclick = e => viewRoom(e.currentTarget.dataset.id);
+    document.getElementById('logouti')?.addEventListener('click', async () => {
+      try {
+        await fetch('/logout');
+        localStorage.clear();
+        window.location.href = '/login';
+      } catch (error) {
+        console.log("Logout failed:", error);
+        alert("Logout failed. Please try again.");
+      }
     });
-  }
-document.getElementById('createRoomBtn').addEventListener('click', () => {
-  openModal('createRoomModal');
-});
-document.getElementById('createRoomForm').addEventListener('submit', async function (e) {
-  e.preventDefault();
+    document.getElementById('menuToggle')?.addEventListener('click', () => {
+      document.getElementById('sidebar').classList.toggle('hidden');
+    });
 
-  const form = e.target;
-  const formData = {
-    number: form.number.value.trim(),
-    type: form.type.value,
-    price: parseFloat(form.price.value),
-    features: form.features.value.split(',').map(f => f.trim()).filter(f => f),
-  };
+    // Load rooms from API
+    async function loadRooms() {
+      try {
+        const res = await fetch('/api/rooms');
+        if (!res.ok) throw new Error(res.statusText);
+        const { totalRooms } = await res.json();
+        rooms = totalRooms;
+        filteredRooms = [...rooms];
+        roomPage = 1;
+        badge.textContent = rooms.length;
+        renderRooms();
+        updateRoomPagination();
+      } catch (err) {
+        console.error('loadRooms error:', err);
+      }
+    }
 
+    // Render table rows with View, Update, Delete buttons
+    function renderRooms() {
+      tbody.innerHTML = '';
+      const start = (roomPage - 1) * roomPageSize;
+      const slice = filteredRooms.slice(start, start + roomPageSize);
+      slice.forEach((r, i) => {
+        const idx = start + i + 1;
+        tbody.insertAdjacentHTML('beforeend', `
+          <tr class="${i % 2 ? 'bg-gray-50' : ''}">
+            <td class="px-4 py-2">${idx}</td>
+            <td class="px-4 py-2">${r.number}</td>
+            <td class="px-4 py-2 capitalize">${r.type}</td>
+            <td class="px-4 py-2">${r.price.toLocaleString()} PKR</td>
+            <td class="px-4 py-2 capitalize">${r.status}</td>
+            <td class="px-4 py-2 space-x-2">
+              <button data-id="${r._id}" class="viewBtn px-2 py-1 text-white bg-green-500 rounded hover:bg-green-600">View</button>
+              <button data-id="${r._id}" class="updateBtn px-2 py-1 text-white bg-blue-500 rounded hover:bg-blue-600">Update</button>
+              <button data-id="${r._id}" class="deleteBtn px-2 py-1 text-white bg-red-500 rounded hover:bg-red-600">Delete</button>
+            </td>
+          </tr>
+        `);
+      });
+      attachRoomHandlers();
+    }
+
+    // Attach handlers to buttons
+    function attachRoomHandlers() {
+      document.querySelectorAll('.viewBtn').forEach(btn => {
+        btn.onclick = e => viewRoom(e.currentTarget.dataset.id);
+      });
+      document.querySelectorAll('.updateBtn').forEach(btn => {
+        btn.onclick = e => openUpdateModal(e.currentTarget.dataset.id);
+      });
+      document.querySelectorAll('.deleteBtn').forEach(btn => {
+        btn.onclick = e => openDeleteModal(e.currentTarget.dataset.id);
+      });
+    }
+
+    // Open update modal with room data
+    function openUpdateModal(id) {
+      const room = rooms.find(r => r._id === id);
+      if (!room) return;
+      document.getElementById('update-room-id').value = room._id;
+      document.getElementById('update-room-number').value = room.number;
+      document.getElementById('update-room-type').value = room.type;
+      document.getElementById('update-room-price').value = room.price;
+      document.getElementById('update-room-features').value = room.features ? room.features.join(', ') : '';
+      openModal('updateRoomModal');
+    }
+
+    // Open delete confirmation modal
+    function openDeleteModal(id) {
+      roomToDelete = id;
+      openModal('deleteRoomModal');
+    }
+
+    // Handle update form submission
+    document.getElementById('updateRoomForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const form = e.target;
+      const id = form.id.value;
+      const formData = {
+        number: form.number.value.trim(),
+        type: form.type.value,
+        price: parseFloat(form.price.value),
+        features: form.features.value.split(',').map(f => f.trim()).filter(f => f),
+      };
+      try {
+        const res = await fetch(`/api/updateRoom/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(formData),
+        });
+        if (!res.ok) throw new Error(await res.text());
+        const updatedRoom = await res.json();
+        const index = rooms.findIndex(r => r._id === id);
+        if (index !== -1) {
+          rooms[index] = updatedRoom;
+          filteredRooms = [...rooms];
+          renderRooms();
+          updateRoomPagination();
+        }
+        closeModal('updateRoomModal');
+      } catch (err) {
+        console.error('Update room failed:', err);
+        alert('Failed to update room: ' + err.message);
+      }
+    });
+
+    // Handle delete confirmation
+document.getElementById('confirmDeleteBtn').addEventListener('click', async function () {
+  if (!roomToDelete) return;
   try {
-    const res = await fetch('http://localhost:2000/api/rooms/', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
-      body: JSON.stringify(formData),
+    console.log(`Attempting to delete room with id: ${roomToDelete}`);
+    const res = await fetch(`/api/deleteRoom/${roomToDelete}`, {
+      method: 'DELETE'
     });
-
-    if (!res.ok) throw new Error(await res.text());
-
-    const newRoom = await res.json();
-    rooms.push(newRoom);
-    filteredRooms.push(newRoom);
+    console.log(`Response status: ${res.status}`);
+    if (!res.ok) {
+      const errorText = await res.text();
+      console.error(`Delete request failed with status ${res.status}: ${errorText}`);
+      throw new Error(errorText);
+    }
+    console.log('Room deleted successfully');
     badge.textContent = rooms.length;
-
-    closeModal('createRoomModal');
-    form.reset();
     renderRooms();
     updateRoomPagination();
+    closeModal('deleteRoomModal');
+    roomToDelete = null;
+    window.location.reload();
   } catch (err) {
-    console.error('Create room failed:', err);
-    alert('Failed to create room: ' + err.message);
+    console.error('Delete room failed:', err);
+    alert('Failed to delete room: ' + err.message);
   }
 });
+    // Create room handler
+    document.getElementById('createRoomBtn').addEventListener('click', () => {
+      openModal('createRoomModal');
+    });
+    document.getElementById('createRoomForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+      const form = e.target;
+      const formData = {
+        number: form.number.value.trim(),
+        type: form.type.value,
+        price: parseFloat(form.price.value),
+        features: form.features.value.split(',').map(f => f.trim()).filter(f => f),
+      };
+      try {
+        const res = await fetch('http://localhost:2000/api/rooms/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+          body: JSON.stringify(formData),
+        });
+        if (!res.ok) throw new Error(await res.text());
+        const newRoom = await res.json();
+        rooms.push(newRoom);
+        filteredRooms.push(newRoom);
+        badge.textContent = rooms.length;
+        closeModal('createRoomModal');
+        form.reset();
+        renderRooms();
+        updateRoomPagination();
+      } catch (err) {
+        console.error('Create room failed:', err);
+        alert('Failed to create room: ' + err.message);
+      }
+    });
 
-  // Show the room details modal
-  function viewRoom(id) {
-    const r = rooms.find(x => x._id === id);
-    if (!r) return;
-    document.getElementById('viewNumber').innerText = r.number;
-    document.getElementById('viewType').innerText = r.type;
-    document.getElementById('viewPrice').innerText = r.price.toLocaleString();
-    document.getElementById('viewStatus').innerText = r.status;
-    document.getElementById('viewCreated').innerText = new Date(r.createdAt).toLocaleString();
-    document.getElementById('viewUpdated').innerText = new Date(r.updatedAt).toLocaleString();
-
-    const ul = document.getElementById('viewFeatures');
-    ul.innerHTML = '';
-    if (r.features && r.features.length) {
-      r.features.forEach(f => ul.insertAdjacentHTML('beforeend', `<li>${f}</li>`));
-    } else {
-      ul.innerHTML = '<li class="italic text-gray-500">No features</li>';
+    // View room details
+    function viewRoom(id) {
+      const r = rooms.find(x => x._id === id);
+      if (!r) return;
+      document.getElementById('viewNumber').innerText = r.number;
+      document.getElementById('viewType').innerText = r.type;
+      document.getElementById('viewPrice').innerText = r.price.toLocaleString();
+      document.getElementById('viewStatus').innerText = r.status;
+      document.getElementById('viewCreated').innerText = new Date(r.createdAt).toLocaleString();
+      document.getElementById('viewUpdated').innerText = new Date(r.updatedAt).toLocaleString();
+      const ul = document.getElementById('viewFeatures');
+      ul.innerHTML = '';
+      if (r.features && r.features.length) {
+        r.features.forEach(f => ul.insertAdjacentHTML('beforeend', `<li>${f}</li>`));
+      } else {
+        ul.innerHTML = '<li class="italic text-gray-500">No features</li>';
+      }
+      openModal('roomViewModal');
     }
 
-    openModal('roomViewModal');
-  }
-
-  // Update pagination controls
-  function updateRoomPagination() {
-    const totalPages = Math.max(1, Math.ceil(filteredRooms.length / roomPageSize));
-    pageInfo.textContent = `Page ${roomPage} of ${totalPages}`;
-    prevBtn.disabled = roomPage === 1;
-    nextBtn.disabled = roomPage === totalPages;
-  }
-
-  // Pagination button handlers
-  prevBtn.onclick = () => {
-    if (roomPage > 1) {
-      roomPage--;
-      renderRooms();
-      updateRoomPagination();
+    // Update pagination controls
+    function updateRoomPagination() {
+      const totalPages = Math.max(1, Math.ceil(filteredRooms.length / roomPageSize));
+      pageInfo.textContent = `Page ${roomPage} of ${totalPages}`;
+      prevBtn.disabled = roomPage === 1;
+      nextBtn.disabled = roomPage === totalPages;
     }
-  };
-  nextBtn.onclick = () => {
-    const max = Math.ceil(filteredRooms.length / roomPageSize);
-    if (roomPage < max) {
-      roomPage++;
-      renderRooms();
-      updateRoomPagination();
-    }
-  };
 
-  // Live search & refresh
-  searchInput.oninput = e => {
-    const q = e.target.value.toLowerCase();
-    filteredRooms = rooms.filter(r =>
-      r.number.includes(q) ||
-      r.type.toLowerCase().includes(q) ||
-      String(r.price).includes(q) ||
-      r.status.toLowerCase().includes(q)
-    );
-    roomPage = 1;
-    renderRooms();
-    updateRoomPagination();
-  };
-  refreshBtn.onclick = loadRooms;
-
-  // Socket live badge update
-  if (adminSocket) {
-    adminSocket.onRoomCreated(newRoom => {
-      rooms.push(newRoom);
-      filteredRooms.push(newRoom);
-      badge.textContent = rooms.length;
-      const max = Math.ceil(filteredRooms.length / roomPageSize);
-      if (roomPage === max) {
+    // Pagination handlers
+    prevBtn.onclick = () => {
+      if (roomPage > 1) {
+        roomPage--;
         renderRooms();
         updateRoomPagination();
       }
-    });
-  }
-
-  // Fetch dashboard stats
-  fetch('/api/stats')
-    .then(res => res.json())
-    .then(data => {
-      document.getElementById('totalRooms').textContent = data.totalRooms?.length ?? '—';
-      document.getElementById('occupiedRooms').textContent = data.occupiedRooms ?? '—';
-      document.getElementById('todaysBookings').textContent = data.todaysBookings ?? '—';
-      document.getElementById('revenue').textContent = '$' + (data.revenue ?? '0');
-    })
-    .catch(err => console.error('Stats fetch failed:', err));
-
-  // Socket handlers for bookings & invoices
-  if (adminSocket) {
-    adminSocket.onBookingCreated(data => {
-      const bookingBadge = document.getElementById('bookingBadge');
-      if (bookingBadge) {
-        bookingBadge.textContent = String(Number(bookingBadge.textContent || '0') + 1);
+    };
+    nextBtn.onclick = () => {
+      const max = Math.ceil(filteredRooms.length / roomPageSize);
+      if (roomPage < max) {
+        roomPage++;
+        renderRooms();
+        updateRoomPagination();
       }
-    });
-    adminSocket.onInvoiceGenerated(data => {
-      alert(`🧾 New invoice for $${data.amount} generated!`);
-    });
-  }
+    };
 
-  // Initialize on load
-  document.addEventListener('DOMContentLoaded', loadRooms);
-</script>
+    // Search and refresh
+    searchInput.oninput = e => {
+      const q = e.target.value.toLowerCase();
+      filteredRooms = rooms.filter(r =>
+        r.number.includes(q) ||
+        r.type.toLowerCase().includes(q) ||
+        String(r.price).includes(q) ||
+        r.status.toLowerCase().includes(q)
+      );
+      roomPage = 1;
+      renderRooms();
+      updateRoomPagination();
+    };
+    refreshBtn.onclick = loadRooms;
 
+    // Socket updates
+    if (adminSocket) {
+      adminSocket.onRoomCreated(newRoom => {
+        rooms.push(newRoom);
+        filteredRooms.push(newRoom);
+        badge.textContent = rooms.length;
+        const max = Math.ceil(filteredRooms.length / roomPageSize);
+        if (roomPage === max) {
+          renderRooms();
+          updateRoomPagination();
+        }
+      });
+    }
 
+    // Occupied rooms rendering
+    function renderOccupiedRooms() {
+      occupiedTbody.innerHTML = '';
+      const start = (occupiedRoomPage - 1) * occupiedRoomPageSize;
+      const slice = occupiedFilteredRooms.slice(start, start + occupiedRoomPageSize);
+      slice.forEach((r, i) => {
+        const idx = start + i + 1;
+        occupiedTbody.insertAdjacentHTML('beforeend', `
+          <tr class="${i % 2 ? 'bg-gray-50' : ''}">
+            <td class="px-4 py-2">${idx}</td>
+            <td class="px-4 py-2">${r.number}</td>
+            <td class="px-4 py-2 capitalize">${r.type}</td>
+            <td class="px-4 py-2">${r.price.toLocaleString()} PKR</td>
+            <td class="px-4 py-2 capitalize">${r.status}</td>
+            <td class="px-4 py-2">
+              <button data-id="${r._id}" class="viewBtn px-2 py-1 text-white bg-green-500 rounded hover:bg-green-600">View</button>
+            </td>
+          </tr>
+        `);
+      });
+      attachOccupiedRoomHandlers();
+    }
+
+    function attachOccupiedRoomHandlers() {
+      document.querySelectorAll('#occupiedRoomTableBody .viewBtn').forEach(btn => {
+        btn.onclick = e => viewRoom(e.currentTarget.dataset.id);
+      });
+    }
+
+    function updateOccupiedRoomPagination() {
+      const totalPages = Math.max(1, Math.ceil(occupiedFilteredRooms.length / occupiedRoomPageSize));
+      occupiedPageInfo.textContent = `Page ${occupiedRoomPage} of ${totalPages}`;
+      occupiedPrevBtn.disabled = occupiedRoomPage === 1;
+      occupiedNextBtn.disabled = occupiedRoomPage === totalPages;
+    }
+
+    occupiedPrevBtn.onclick = () => {
+      if (occupiedRoomPage > 1) {
+        occupiedRoomPage--;
+        renderOccupiedRooms();
+        updateOccupiedRoomPagination();
+      }
+    };
+    occupiedNextBtn.onclick = () => {
+      const max = Math.ceil(occupiedFilteredRooms.length / occupiedRoomPageSize);
+      if (occupiedRoomPage < max) {
+        occupiedRoomPage++;
+        renderOccupiedRooms();
+        updateOccupiedRoomPagination();
+      }
+    };
+
+    occupiedSearchInput.oninput = e => {
+      const q = e.target.value.toLowerCase();
+      occupiedFilteredRooms = occupiedRooms.filter(r =>
+        r.number.includes(q) ||
+        r.type.toLowerCase().includes(q) ||
+        String(r.price).includes(q) ||
+        r.status.toLowerCase().includes(q)
+      );
+      occupiedRoomPage = 1;
+      renderOccupiedRooms();
+      updateOccupiedRoomPagination();
+    };
+
+    occupiedRefreshBtn.onclick = () => {
+      fetch('/api/stats')
+        .then(res => res.json())
+        .then(data => {
+          occupiedRooms = data.occupiedRooms?.occupied ?? [];
+          occupiedFilteredRooms = [...occupiedRooms];
+          occupiedBadge.textContent = occupiedRooms.length;
+          renderOccupiedRooms();
+          updateOccupiedRoomPagination();
+        })
+        .catch(err => console.error('Refresh occupied rooms failed:', err));
+    };
+
+    fetch('/api/stats')
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById('totalRooms').textContent = data.totalRooms?.length ?? '—';
+        document.getElementById('occupiedRooms').textContent = data.occupiedRooms?.rooms ?? '—';
+        document.getElementById('todaysBookings').textContent = data.todaysBookings?.count ?? '—';
+        document.getElementById('revenue').textContent = (data.revenue ?? '0') + ' PKR';
+        occupiedRooms = data.occupiedRooms?.occupied ?? [];
+        occupiedFilteredRooms = [...occupiedRooms];
+        occupiedBadge.textContent = occupiedRooms.length;
+        renderOccupiedRooms();
+        updateOccupiedRoomPagination();
+      })
+      .catch(err => console.error('Stats fetch failed:', err));
+
+    if (adminSocket) {
+      adminSocket.onBookingCreated(data => {
+        const bookingBadge = document.getElementById('bookingBadge');
+        if (bookingBadge) {
+          bookingBadge.textContent = String(Number(bookingBadge.textContent || '0') + 1);
+        }
+      });
+      adminSocket.onInvoiceGenerated(data => {
+        alert(`🧾 New invoice for $${data.amount} generated!`);
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', loadRooms);
+  </script>
   <script src="./js/adminSocket.js"></script>
 </body>
 </html>
