@@ -14,6 +14,7 @@
     }
   </script>
   <!-- Header -->
+   <div id="toastContainer" class="fixed bottom-4 right-4 space-y-2 z-50"></div>
   <header class="bg-white shadow px-4 py-3 flex items-center justify-between">
     <h1 class="text-xl sm:text-2xl font-bold text-blue-600">LuxuryStay Admin</h1>
     <div class="lg:hidden">
@@ -364,6 +365,41 @@
     let occupiedRooms = [], occupiedFilteredRooms = [], occupiedRoomPage = 1;
     const occupiedRoomPageSize = 5;
     let roomToDelete = null;
+function showToast(msg, type = 'success') {
+  const icons = {
+    success: '✅',
+    error: '❌',
+    info: 'ℹ️',
+    warning: '⚠️'
+  };
+
+  const bgColors = {
+    success: 'bg-green-500',
+    error: 'bg-red-500',
+    info: 'bg-blue-500',
+    warning: 'bg-yellow-500 text-black'
+  };
+
+  const icon = icons[type] || '';
+  const bgColor = bgColors[type] || 'bg-gray-500';
+
+  const t = document.createElement('div');
+  t.innerHTML = `<span class="mr-2">${icon}</span>${msg}`;
+  t.className = `
+    flex items-center
+    px-4 py-2 mb-2
+    rounded shadow-md
+    text-white text-sm font-medium
+    animate-slide-in
+    ${bgColor}
+  `.trim().replace(/\s+/g, ' ');
+
+  const container = document.getElementById('toastContainer');
+  if (container) {
+    container.append(t);
+    setTimeout(() => t.remove(), 3000);
+  }
+}
 
     // UI refs
     const badge = document.getElementById('roomBadge');
@@ -393,7 +429,7 @@
         window.location.href = '/login';
       } catch (error) {
         console.log("Logout failed:", error);
-        alert("Logout failed. Please try again.");
+        showToast("Logout failed. Please try again.", "error");
       }
     });
     document.getElementById('logouti')?.addEventListener('click', async () => {
@@ -403,7 +439,7 @@
         window.location.href = '/login';
       } catch (error) {
         console.log("Logout failed:", error);
-        alert("Logout failed. Please try again.");
+        showToast("Logout failed. Please try again.", "error");
       }
     });
     document.getElementById('menuToggle')?.addEventListener('click', () => {
@@ -422,8 +458,10 @@
         badge.textContent = rooms.length;
         renderRooms();
         updateRoomPagination();
+        showToast('Rooms loaded successfully', 'info');
       } catch (err) {
         console.error('loadRooms error:', err);
+        showToast('Failed to load rooms', 'error');
       }
     }
 
@@ -512,9 +550,11 @@
           updateRoomPagination();
         }
         closeModal('updateRoomModal');
+        showToast('Room updated successfully', 'success');
+        window.location.reload();
       } catch (err) {
         console.error('Update room failed:', err);
-        alert('Failed to update room: ' + err.message);
+        showToast('Failed to update room: ' + err.message, 'error');
       }
     });
 
@@ -530,7 +570,7 @@ document.getElementById('confirmDeleteBtn').addEventListener('click', async func
     if (!res.ok) {
       const errorText = await res.text();
       console.error(`Delete request failed with status ${res.status}: ${errorText}`);
-      throw new Error(errorText);
+      throw showToast('Failed to delete room: ' + errorText, 'error');
     }
     console.log('Room deleted successfully');
     badge.textContent = rooms.length;
@@ -538,10 +578,11 @@ document.getElementById('confirmDeleteBtn').addEventListener('click', async func
     updateRoomPagination();
     closeModal('deleteRoomModal');
     roomToDelete = null;
+    showToast('Room deleted successfully', 'success');
     window.location.reload();
   } catch (err) {
     console.error('Delete room failed:', err);
-    alert('Failed to delete room: ' + err.message);
+    showToast('Failed to delete room: ' + err.message, 'error');
   }
 });
     // Create room handler
@@ -575,9 +616,11 @@ document.getElementById('confirmDeleteBtn').addEventListener('click', async func
         form.reset();
         renderRooms();
         updateRoomPagination();
+        showToast('Room created successfully', 'success');
+        window.location.reload();
       } catch (err) {
         console.error('Create room failed:', err);
-        alert('Failed to create room: ' + err.message);
+        showToast('Failed to create room: ' + err.message, 'error');
       }
     });
 
@@ -615,6 +658,7 @@ document.getElementById('confirmDeleteBtn').addEventListener('click', async func
         roomPage--;
         renderRooms();
         updateRoomPagination();
+        showToast('Previous page', 'info');
       }
     };
     nextBtn.onclick = () => {
@@ -623,6 +667,7 @@ document.getElementById('confirmDeleteBtn').addEventListener('click', async func
         roomPage++;
         renderRooms();
         updateRoomPagination();
+        showToast('Next page', 'info');
       }
     };
 
@@ -729,6 +774,7 @@ document.getElementById('confirmDeleteBtn').addEventListener('click', async func
           occupiedBadge.textContent = occupiedRooms.length;
           renderOccupiedRooms();
           updateOccupiedRoomPagination();
+          showToast('Occupied rooms refreshed', 'success');
         })
         .catch(err => console.error('Refresh occupied rooms failed:', err));
     };
@@ -737,16 +783,20 @@ document.getElementById('confirmDeleteBtn').addEventListener('click', async func
       .then(res => res.json())
       .then(data => {
         document.getElementById('totalRooms').textContent = data.totalRooms?.length ?? '—';
-        document.getElementById('occupiedRooms').textContent = data.occupiedRooms?.rooms ?? '—';
+        document.getElementById('occupiedRooms').textContent = data.occupiedRooms?.count ?? '—';
         document.getElementById('todaysBookings').textContent = data.todaysBookings?.count ?? '—';
-        document.getElementById('revenue').textContent = (data.revenue ?? '0') + ' PKR';
+        document.getElementById('revenue').textContent = (data.revenue.totalRevenue ?? '0') + ' PKR';
         occupiedRooms = data.occupiedRooms?.occupied ?? [];
         occupiedFilteredRooms = [...occupiedRooms];
         occupiedBadge.textContent = occupiedRooms.length;
         renderOccupiedRooms();
         updateOccupiedRoomPagination();
+        showToast('Stats refreshed', 'success');
       })
-      .catch(err => console.error('Stats fetch failed:', err));
+      .catch((err) => {
+        console.error('Stats fetch failed:', err);
+        showToast('Failed to fetch stats', 'error');
+      });
 
     if (adminSocket) {
       adminSocket.onBookingCreated(data => {
@@ -756,7 +806,7 @@ document.getElementById('confirmDeleteBtn').addEventListener('click', async func
         }
       });
       adminSocket.onInvoiceGenerated(data => {
-        alert(`🧾 New invoice for $${data.amount} generated!`);
+        alert(`🧾 New invoice for ${data.amount} PKR generated!`);
       });
     }
 

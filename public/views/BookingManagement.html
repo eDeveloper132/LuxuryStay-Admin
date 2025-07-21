@@ -13,6 +13,7 @@
       window.location.href = '/login';
     }
   </script>
+    <div id="toastContainer" class="fixed bottom-4 right-4 space-y-2 z-50"></div>
   <!-- Header -->
   <header class="bg-white shadow px-4 py-3 flex items-center justify-between">
     <h1 class="text-xl sm:text-2xl font-bold text-blue-600">LuxuryStay Admin</h1>
@@ -183,6 +184,41 @@
   <!-- JS Scripts -->
   <script>
     const adminSocket = window.adminSocket;
+function showToast(msg, type = 'success') {
+  const icons = {
+    success: '✅',
+    error: '❌',
+    info: 'ℹ️',
+    warning: '⚠️'
+  };
+
+  const bgColors = {
+    success: 'bg-green-500',
+    error: 'bg-red-500',
+    info: 'bg-blue-500',
+    warning: 'bg-yellow-500 text-black'
+  };
+
+  const icon = icons[type] || '';
+  const bgColor = bgColors[type] || 'bg-gray-500';
+
+  const t = document.createElement('div');
+  t.innerHTML = `<span class="mr-2">${icon}</span>${msg}`;
+  t.className = `
+    flex items-center
+    px-4 py-2 mb-2
+    rounded shadow-md
+    text-white text-sm font-medium
+    animate-slide-in
+    ${bgColor}
+  `.trim().replace(/\s+/g, ' ');
+
+  const container = document.getElementById('toastContainer');
+  if (container) {
+    container.append(t);
+    setTimeout(() => t.remove(), 3000);
+  }
+}
 
     // Toggle sidebar & logout
     document.getElementById('logout')?.addEventListener('click', async () => {
@@ -246,25 +282,38 @@
       const r = await fetch('/api/rooms');
       rooms = r.ok ? (await r.json()).totalRooms : [];
     }
-    async function loadBookings() {
-      const r = await fetch('/api/bookings');
-      const result = r.ok ? await r.json() : { totalBookings: [] };
-      bookings = result.totalBookings.filter(b => b.status !== 'cancelled');
-      cancelledBookings = result.totalBookings.filter(b => b.status === 'cancelled');
-      filteredBookings = [...bookings];
-      filteredCancelledBookings = [...cancelledBookings];
-      bookingPage = 1;
-      cancelledBookingPage = 1;
-      refs.bookingBadge.textContent = bookings.length;
-      refs.cancelledBadge.textContent = cancelledBookings.length;
-      await loadUsers();
-      await loadRooms();
-      renderBookings();
-      renderCancelledBookings();
-      updatePagination();
-      updateCancelledPagination();
-    }
-    loadBookings();
+async function loadBookings() {
+  const r = await fetch('/api/bookings');
+  const result = r.ok ? await r.json() : { totalBookings: [] };
+
+  // Filter logic corrected
+  bookings = result.totalBookings.filter(
+    b => b.status === 'reserved' || b.status === 'checked-in'
+  );
+  cancelledBookings = result.totalBookings.filter(
+    b => b.status === 'cancelled' || b.status === 'checked-out'
+  );
+
+  filteredBookings = [...bookings];
+  filteredCancelledBookings = [...cancelledBookings];
+
+  bookingPage = 1;
+  cancelledBookingPage = 1;
+
+  refs.bookingBadge.textContent = bookings.length;
+  refs.cancelledBadge.textContent = cancelledBookings.length;
+
+  await loadUsers();
+  await loadRooms();
+  renderBookings();
+  renderCancelledBookings();
+  updatePagination();
+  updateCancelledPagination();
+  showToast('Data loaded successfully', 'info');
+}
+
+loadBookings();
+
 
     // Render & paginate active bookings
     function renderBookings() {
@@ -373,7 +422,7 @@
       const r = await fetch(`/api/cancelBooking/${id}`, {
         method: 'PATCH'
       });
-      if (!r.ok) return alert('Cancel failed');
+      if (!r.ok) return showToast('Cancellation failed', 'error');
       const updated = await r.json();
       const idx = bookings.findIndex(b => b._id === id);
       if (idx > -1) {
@@ -383,10 +432,14 @@
         filteredCancelledBookings = [...cancelledBookings];
         refs.bookingBadge.textContent = bookings.length;
         refs.cancelledBadge.textContent = cancelledBookings.length;
+        showToast('Booking cancelled successfully', 'success');
         renderBookings();
         renderCancelledBookings();
         updatePagination();
         updateCancelledPagination();
+        window.location.reload();
+      } else {
+        showToast('Booking not found', 'error');
       }
     }
 
@@ -415,7 +468,7 @@
         },
         body: JSON.stringify(payload)
       });
-      if (!r.ok) return alert('Creation failed');
+      if (!r.ok) return showToast('Creation failed', 'error');
       const created = await r.json();
       if (created.status === 'cancelled') {
         cancelledBookings.push(created);
@@ -423,10 +476,12 @@
         refs.cancelledBadge.textContent = cancelledBookings.length;
         renderCancelledBookings();
         updateCancelledPagination();
+        showToast('Booking cancelled successfully', 'success');
       } else {
         bookings.push(created);
         filteredBookings = [...bookings];
         refs.bookingBadge.textContent = bookings.length;
+        showToast('Booking created successfully', 'success');
         renderBookings();
         updatePagination();
         window.location.reload();
@@ -440,6 +495,7 @@
         bookingPage--;
         renderBookings();
         updatePagination();
+        showToast('Previous page', 'info');
       }
     };
     refs.bookingNextBtn.onclick = () => {
@@ -448,6 +504,7 @@
         bookingPage++;
         renderBookings();
         updatePagination();
+        showToast('Next page', 'info');
       }
     };
     refs.bookingSearch.oninput = e => {
@@ -469,7 +526,7 @@
         cancelledBookingPage--;
         renderCancelledBookings();
         updateCancelledPagination();
-        window.location.reload();
+        showToast('Previous page', 'info');
       }
     };
     refs.cancelledNextBtn.onclick = () => {
@@ -478,6 +535,7 @@
         cancelledBookingPage++;
         renderCancelledBookings();
         updateCancelledPagination();
+        showToast('Next page', 'info');
       }
     };
     refs.cancelledSearch.oninput = e => {

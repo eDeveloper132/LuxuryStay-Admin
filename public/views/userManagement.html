@@ -250,16 +250,42 @@
     document.getElementById('sidebar').classList.toggle('hidden');
   });
   // Toast helper
-  function showToast(msg, type = 'success') {
-    const t = document.createElement('div');
-    t.innerText = msg;
-    t.className = `
-      px-4 py-2 rounded shadow-md text-white
-      ${type === 'error' ? 'bg-red-500' : 'bg-green-500'}
-    `.trim().replace(/\s+/g, ' ');
-    document.getElementById('toastContainer').append(t);
+function showToast(msg, type = 'success') {
+  const icons = {
+    success: '✅',
+    error: '❌',
+    info: 'ℹ️',
+    warning: '⚠️'
+  };
+
+  const bgColors = {
+    success: 'bg-green-500',
+    error: 'bg-red-500',
+    info: 'bg-blue-500',
+    warning: 'bg-yellow-500 text-black'
+  };
+
+  const icon = icons[type] || '';
+  const bgColor = bgColors[type] || 'bg-gray-500';
+
+  const t = document.createElement('div');
+  t.innerHTML = `<span class="mr-2">${icon}</span>${msg}`;
+  t.className = `
+    flex items-center
+    px-4 py-2 mb-2
+    rounded shadow-md
+    text-white text-sm font-medium
+    animate-slide-in
+    ${bgColor}
+  `.trim().replace(/\s+/g, ' ');
+
+  const container = document.getElementById('toastContainer');
+  if (container) {
+    container.append(t);
     setTimeout(() => t.remove(), 3000);
   }
+}
+
 
   let users = [], filtered = [], currentPage = 1, currentUserId = null;
   const pageSize = 10;
@@ -275,6 +301,7 @@
       document.getElementById('userBadge').textContent = users.length;
       renderTable();
       updatePagination();
+      showToast('Users Loaded','info');
     } catch (err) {
       console.error('Load users failed:', err);
       showToast('Failed to load users','error');
@@ -330,11 +357,21 @@
 
   // Pagination btns
   document.getElementById('prevPage').onclick = () => {
-    if (currentPage > 1) { currentPage--; renderTable(); updatePagination(); }
+    if (currentPage > 1) {
+      currentPage--; 
+      renderTable(); 
+      updatePagination();
+      showToast('Previous page','info');
+    }
   };
   document.getElementById('nextPage').onclick = () => {
     const max = Math.ceil(filtered.length / pageSize);
-    if (currentPage < max) { currentPage++; renderTable(); updatePagination(); }
+    if (currentPage < max) {
+      currentPage++; 
+      renderTable(); 
+      updatePagination(); 
+      showToast('Next page','info');
+    }
   };
 
   // Search & refresh
@@ -349,7 +386,7 @@
     renderTable();
     updatePagination();
   };
-  document.getElementById('refreshBtn').onclick = loadUsers;
+  document.getElementById('refreshBtn').onclick = loadUsers, showToast('Users refreshed','info');
 
   // VIEW
   function viewUser(id) {
@@ -384,7 +421,7 @@
       users = users.map(u => ((u._id?.$oid||u._id) == currentUserId ? upd : u));
       filtered = filtered.map(u => ((u._id?.$oid||u._id) == currentUserId ? upd : u));
       renderTable(); updatePagination();
-      showToast('User updated!');
+      showToast('User updated!', 'success');
     } catch (err) {
       showToast(err.message, 'error');
     } finally {
@@ -413,7 +450,7 @@
       users = users.map(u => ((u._id?.$oid||u._id) == currentUserId ? upd : u));
       filtered = filtered.map(u => ((u._id?.$oid||u._id) == currentUserId ? upd : u));
       renderTable(); updatePagination();
-      showToast('Role updated!');
+      showToast('Role updated!', 'success');
     } catch (err) {
       showToast(err.message, 'error');
     } finally {
@@ -434,7 +471,7 @@
       users = users.filter(u => (u._id?.$oid||u._id) != currentUserId);
       filtered = filtered.filter(u => (u._id?.$oid||u._id) != currentUserId);
       renderTable(); updatePagination();
-      showToast('User deleted!');
+      showToast('User deleted!', 'success');
     } catch (err) {
       showToast(err.message, 'error');
     } finally {
@@ -472,7 +509,7 @@ document.getElementById('createForm').onsubmit = async e => {
     document.getElementById('userBadge').textContent = users.length;
     renderTable();
     updatePagination();
-    showToast('User created!');
+    showToast('User created!', 'success');
   } catch (err) {
     showToast(err.message, 'error');
   } finally {
