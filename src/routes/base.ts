@@ -9,8 +9,5 @@ router.get('/', (req: Request, res: Response) => {
 router.get('/users', (req: Request, res: Response) => {
     res.sendFile(path.resolve('public', 'views', 'userManagement.html'));
 });
-router.get('/bookings', (req: Request, res: Response) => {
-    res.sendFile(path.resolve('public', 'views', 'bookingManagement.html'));
-});
 
 export default router;

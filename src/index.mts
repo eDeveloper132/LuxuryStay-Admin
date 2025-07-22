@@ -28,6 +28,9 @@ app.get('/logout', (req: Request, res: Response) => {
   res.clearCookie('user');
   return res.status(200).json({ message: 'Logged out successfully' });
 })
+app.get('/bookings', (req: Request, res: Response) => {
+    res.sendFile(path.resolve('public', 'views', 'bookingManagement.html'));
+});
 io.on('connection', socket => {
   console.log('Client connected:', socket.id);
 });
