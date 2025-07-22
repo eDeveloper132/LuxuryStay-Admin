@@ -1,5 +1,5 @@
 import "dotenv/config";
-import express from 'express';
+import express, { Request, Response } from 'express';
 import http from 'http';
 import { Server } from 'socket.io';
 import baseRoutes from './routes/base.js';
@@ -18,13 +18,13 @@ app.set('io', io);
 app.use('/', baseRoutes);
 app.use('/api', dashboardstatsRoutes);
 app.use('/api/auth', authRoutes);
-app.get('/login',redirectIfAuthenticated, (req, res) => {
+app.get('/login',redirectIfAuthenticated, (req: Request, res: Response) => {
     res.sendFile(path.resolve('public','auth','signin.html'));
 });
-app.get('/signup', redirectIfAuthenticated, (req, res) => {
+app.get('/signup', redirectIfAuthenticated, (req: Request, res: Response) => {
     res.sendFile(path.resolve('public','auth','signup.html'));
 });
-app.get('/logout', (req, res) => {
+app.get('/logout', (req: Request, res: Response) => {
   res.clearCookie('user');
   return res.status(200).json({ message: 'Logged out successfully' });
 })

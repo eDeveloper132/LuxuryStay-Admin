@@ -599,7 +599,7 @@ document.getElementById('confirmDeleteBtn').addEventListener('click', async func
         features: form.features.value.split(',').map(f => f.trim()).filter(f => f),
       };
       try {
-        const res = await fetch('http://localhost:2000/api/rooms/', {
+        const res = await fetch('https://luxury-stay-lyart.vercel.app/api/rooms/', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

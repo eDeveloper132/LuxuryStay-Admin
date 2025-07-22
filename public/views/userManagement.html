@@ -411,7 +411,7 @@ function showToast(msg, type = 'success') {
     e.preventDefault();
     const data = { name: e.target.name.value, email: e.target.email.value };
     try {
-      const res = await fetch(`http://localhost:2000/usermanagement/${currentUserId}`, {
+      const res = await fetch(`https://luxury-stay-lyart.vercel.app/usermanagement/${currentUserId}`, {
         method: 'PUT',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify(data),
@@ -440,7 +440,7 @@ function showToast(msg, type = 'success') {
     e.preventDefault();
     const role = e.target.role.value;
     try {
-      const res = await fetch(`http://localhost:2000/usermanagement/${currentUserId}`, {
+      const res = await fetch(`https://luxury-stay-lyart.vercel.app/usermanagement/${currentUserId}`, {
         method: 'PUT',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify({ role }),
@@ -465,7 +465,7 @@ function showToast(msg, type = 'success') {
   }
   document.getElementById('confirmDeleteBtn').onclick = async () => {
     try {
-      const res = await fetch(`http://localhost:2000/usermanagement/${currentUserId}`, { method: 'DELETE' });
+      const res = await fetch(`https://luxury-stay-lyart.vercel.app/usermanagement/${currentUserId}`, { method: 'DELETE' });
       if (!res.ok) throw new Error('Delete failed');
       await res.json();
       users = users.filter(u => (u._id?.$oid||u._id) != currentUserId);
@@ -493,7 +493,7 @@ document.getElementById('createForm').onsubmit = async e => {
   };
 
   try {
-    const res = await fetch('http://localhost:2000/usermanagement/', {
+    const res = await fetch('https://luxury-stay-lyart.vercel.app/usermanagement/', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify(data)
