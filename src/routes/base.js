@@ -8,4 +8,7 @@ router.get('/', (req, res) => {
 router.get('/users', (req, res) => {
     res.sendFile(path.resolve('public', 'views', 'userManagement.html'));
 });
+router.get('/bookings', (req, res) => {
+    res.sendFile(path.resolve('public', 'views', 'bookings.html'));
+});
 export default router;
