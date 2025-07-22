@@ -5,11 +5,30 @@
       "src": "src/index.mjs",
       "use": "@vercel/node",
       "config": {
-        "includeFiles": ["src/**"]
+        "includeFiles": [
+          "public/**",
+          "src/controllers/**",
+          "src/middleware/**",
+          "src/routes/**",
+          "src/utils/**"
+        ]
       }
     }
   ],
   "routes": [
+    { "handle": "filesystem" },
+    {
+      "src": "/api/auth/(.*)",
+      "dest": "src/index.mjs"
+    },
+    {
+      "src": "/api/(.*)",
+      "dest": "src/index.mjs"
+    },
+    {
+      "src": "^/(login|signup|logout)$",
+      "dest": "src/index.mjs"
+    },
     {
       "src": "/(.*)",
       "dest": "src/index.mjs"
