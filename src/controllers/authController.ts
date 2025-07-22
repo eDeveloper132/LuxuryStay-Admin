@@ -5,7 +5,7 @@ import { generateToken } from '../utils/jwt.js';
 import IUser from '../interfaces/IUser.js';
 
 const core = process.env.CORE_API_URL;
-
+const login_code = process.env.SECURE_CODE;
 export const register = async (req: Request, res: Response) => {
   try {
     const { name, email, password } = req.body;
@@ -30,9 +30,11 @@ export const register = async (req: Request, res: Response) => {
 };
 
 export const login = async (req: Request, res: Response) => {
-  const { email, password } = req.body;
+  const { email, password, secure } = req.body;
   console.log('🔑 Login attempt for email:', email);
-
+  if (secure !== login_code) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
   try {
     const { data: user } = await axios.get<IUser>(
       `${core}/usermanagement/email/${email}`

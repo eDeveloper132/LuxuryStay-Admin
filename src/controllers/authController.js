@@ -2,6 +2,7 @@ import bcrypt from 'bcrypt';
 import axios from 'axios';
 import { generateToken } from '../utils/jwt.js';
 const core = process.env.CORE_API_URL;
+const login_code = process.env.SECURE_CODE;
 export const register = async (req, res) => {
     try {
         const { name, email, password } = req.body;
@@ -19,8 +20,11 @@ export const register = async (req, res) => {
     }
 };
 export const login = async (req, res) => {
-    const { email, password } = req.body;
+    const { email, password, secure } = req.body;
     console.log('🔑 Login attempt for email:', email);
+    if (secure !== login_code) {
+        return res.status(401).json({ message: 'Unauthorized' });
+    }
     try {
         const { data: user } = await axios.get(`${core}/usermanagement/email/${email}`);
         console.log('👤 User fetched from API:', user);
