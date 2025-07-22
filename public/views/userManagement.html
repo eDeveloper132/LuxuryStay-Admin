@@ -493,7 +493,7 @@ document.getElementById('createForm').onsubmit = async e => {
   };
 
   try {
-    const res = await fetch('https://luxury-stay-lyart.vercel.app/usermanagement/', {
+    const res = await fetch('/api/auth/register', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify(data)
