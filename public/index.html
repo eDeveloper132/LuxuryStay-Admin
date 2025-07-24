@@ -15,6 +15,39 @@
   </script>
   <!-- Header -->
    <div id="toastContainer" class="fixed bottom-4 right-4 space-y-2 z-50"></div>
+   <div id="loader" style="display: none;">
+  <div class="flex flex-col min-h-screen">
+    <div class="flex flex-row flex-1">
+      <div class="flex flex-col flex-1 p-0">
+        <div
+          class="relative flex flex-col items-center justify-center p-4 pb-0 flex-1">
+          <div class="relative flex items-center justify-center w-full h-full">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-6 h-6 animate-spin mr-2 text-current"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <line x1="12" y1="2" x2="12" y2="6" />
+              <line x1="12" y1="18" x2="12" y2="22" />
+              <line x1="4.93" y1="4.93" x2="7.76" y2="7.76" />
+              <line x1="16.24" y1="16.24" x2="19.07" y2="19.07" />
+              <line x1="2" y1="12" x2="6" y2="12" />
+              <line x1="18" y1="12" x2="22" y2="12" />
+              <line x1="4.93" y1="19.07" x2="7.76" y2="16.24" />
+              <line x1="16.24" y1="7.76" x2="19.07" y2="4.93" />
+            </svg>
+            <span>Loading...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
   <header class="bg-white shadow px-4 py-3 flex items-center justify-between">
     <h1 class="text-xl sm:text-2xl font-bold text-blue-600">LuxuryStay Admin</h1>
     <div class="lg:hidden">
@@ -365,6 +398,7 @@
     let occupiedRooms = [], occupiedFilteredRooms = [], occupiedRoomPage = 1;
     const occupiedRoomPageSize = 5;
     let roomToDelete = null;
+    const loader = document.getElementById('loader');
 function showToast(msg, type = 'success') {
   const icons = {
     success: '✅',
@@ -424,8 +458,10 @@ function showToast(msg, type = 'success') {
     // Toggle sidebar & logout
     document.getElementById('logout')?.addEventListener('click', async () => {
       try {
+        loader.style.display = 'block';
         await fetch('/logout');
         localStorage.clear();
+        loader.style.display = 'none';
         window.location.href = '/login';
       } catch (error) {
         console.log("Logout failed:", error);
@@ -434,8 +470,10 @@ function showToast(msg, type = 'success') {
     });
     document.getElementById('logouti')?.addEventListener('click', async () => {
       try {
+        loader.style.display = 'block';
         await fetch('/logout');
         localStorage.clear();
+        loader.style.display = 'none';
         window.location.href = '/login';
       } catch (error) {
         console.log("Logout failed:", error);
@@ -449,8 +487,12 @@ function showToast(msg, type = 'success') {
     // Load rooms from API
     async function loadRooms() {
       try {
+        loader.style.display = 'block';
         const res = await fetch('/api/rooms');
-        if (!res.ok) throw new Error(res.statusText);
+        if (!res.ok) {
+          loader.style.display = 'none';
+          throw new Error(res.statusText)
+        };
         const { totalRooms } = await res.json();
         rooms = totalRooms;
         filteredRooms = [...rooms];
@@ -458,6 +500,7 @@ function showToast(msg, type = 'success') {
         badge.textContent = rooms.length;
         renderRooms();
         updateRoomPagination();
+        loader.style.display = 'none';
         showToast('Rooms loaded successfully', 'info');
       } catch (err) {
         console.error('loadRooms error:', err);
@@ -533,6 +576,7 @@ function showToast(msg, type = 'success') {
         features: form.features.value.split(',').map(f => f.trim()).filter(f => f),
       };
       try {
+        loader.style.display = 'block';
         const res = await fetch(`/api/updateRoom/${id}`, {
           method: 'PUT',
           headers: {
@@ -540,7 +584,10 @@ function showToast(msg, type = 'success') {
           },
           body: JSON.stringify(formData),
         });
-        if (!res.ok) throw new Error(await res.text());
+        if (!res.ok) {
+          loader.style.display = 'none';
+          throw new Error(await res.text())
+        };
         const updatedRoom = await res.json();
         const index = rooms.findIndex(r => r._id === id);
         if (index !== -1) {
@@ -550,6 +597,7 @@ function showToast(msg, type = 'success') {
           updateRoomPagination();
         }
         closeModal('updateRoomModal');
+        loader.style.display = 'none';
         showToast('Room updated successfully', 'success');
         window.location.reload();
       } catch (err) {
@@ -563,11 +611,13 @@ document.getElementById('confirmDeleteBtn').addEventListener('click', async func
   if (!roomToDelete) return;
   try {
     console.log(`Attempting to delete room with id: ${roomToDelete}`);
+    loader.style.display = 'block';
     const res = await fetch(`/api/deleteRoom/${roomToDelete}`, {
       method: 'DELETE'
     });
     console.log(`Response status: ${res.status}`);
     if (!res.ok) {
+      loader.style.display = 'none';
       const errorText = await res.text();
       console.error(`Delete request failed with status ${res.status}: ${errorText}`);
       throw showToast('Failed to delete room: ' + errorText, 'error');
@@ -577,6 +627,7 @@ document.getElementById('confirmDeleteBtn').addEventListener('click', async func
     renderRooms();
     updateRoomPagination();
     closeModal('deleteRoomModal');
+    loader.style.display = 'none';
     roomToDelete = null;
     showToast('Room deleted successfully', 'success');
     window.location.reload();
@@ -599,6 +650,7 @@ document.getElementById('confirmDeleteBtn').addEventListener('click', async func
         features: form.features.value.split(',').map(f => f.trim()).filter(f => f),
       };
       try {
+        loader.style.display = 'block';
         const res = await fetch('https://luxury-stay-lyart.vercel.app/api/rooms/', {
           method: 'POST',
           headers: {
@@ -607,7 +659,10 @@ document.getElementById('confirmDeleteBtn').addEventListener('click', async func
           },
           body: JSON.stringify(formData),
         });
-        if (!res.ok) throw new Error(await res.text());
+        if (!res.ok) {
+          loader.style.display = 'none';
+          throw new Error(await res.text())
+        };
         const newRoom = await res.json();
         rooms.push(newRoom);
         filteredRooms.push(newRoom);
@@ -616,6 +671,7 @@ document.getElementById('confirmDeleteBtn').addEventListener('click', async func
         form.reset();
         renderRooms();
         updateRoomPagination();
+        loader.style.display = 'none';
         showToast('Room created successfully', 'success');
         window.location.reload();
       } catch (err) {

@@ -14,7 +14,39 @@
     }
   </script>
   <div id="toastContainer" class="fixed bottom-4 right-4 space-y-2 z-50"></div>
-
+<div id="loader" style="display: none;">
+  <div class="flex flex-col min-h-screen">
+    <div class="flex flex-row flex-1">
+      <div class="flex flex-col flex-1 p-0">
+        <div
+          class="relative flex flex-col items-center justify-center p-4 pb-0 flex-1">
+          <div class="relative flex items-center justify-center w-full h-full">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-6 h-6 animate-spin mr-2 text-current"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <line x1="12" y1="2" x2="12" y2="6" />
+              <line x1="12" y1="18" x2="12" y2="22" />
+              <line x1="4.93" y1="4.93" x2="7.76" y2="7.76" />
+              <line x1="16.24" y1="16.24" x2="19.07" y2="19.07" />
+              <line x1="2" y1="12" x2="6" y2="12" />
+              <line x1="18" y1="12" x2="22" y2="12" />
+              <line x1="4.93" y1="19.07" x2="7.76" y2="16.24" />
+              <line x1="16.24" y1="7.76" x2="19.07" y2="4.93" />
+            </svg>
+            <span>Loading...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 <div id="viewModal" class="fixed inset-0 hidden flex items-center justify-center bg-black bg-opacity-50">
   <div class="bg-white rounded-2xl shadow-lg w-96 p-6 space-y-4">
     <h3 class="text-2xl font-bold text-blue-600">User Details</h3>
@@ -249,6 +281,7 @@
   document.getElementById('menuToggle')?.addEventListener('click', () => {
     document.getElementById('sidebar').classList.toggle('hidden');
   });
+  const loader = document.getElementById('loader');
   // Toast helper
 function showToast(msg, type = 'success') {
   const icons = {
@@ -293,14 +326,19 @@ function showToast(msg, type = 'success') {
   // Fetch & render
   async function loadUsers() {
     try {
+      loader.style.display = 'block';
       const resp = await fetch('/api/getusers');
-      if (!resp.ok) throw new Error(resp.statusText);
+      if (!resp.ok) {
+        loader.style.display = 'none';
+        throw new Error(resp.statusText)
+      };
       users = await resp.json();
       filtered = [...users];
       currentPage = 1;
       document.getElementById('userBadge').textContent = users.length;
       renderTable();
       updatePagination();
+      loader.style.display = 'none';
       showToast('Users Loaded','info');
     } catch (err) {
       console.error('Load users failed:', err);
@@ -411,16 +449,21 @@ function showToast(msg, type = 'success') {
     e.preventDefault();
     const data = { name: e.target.name.value, email: e.target.email.value };
     try {
+      loader.style.display = 'block';
       const res = await fetch(`https://luxury-stay-lyart.vercel.app/usermanagement/${currentUserId}`, {
         method: 'PUT',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify(data),
       });
-      if (!res.ok) throw new Error('Update failed');
+      if (!res.ok) {
+        loader.style.display = 'none';
+        throw new Error('Update failed')
+      };
       const upd = await res.json();
       users = users.map(u => ((u._id?.$oid||u._id) == currentUserId ? upd : u));
       filtered = filtered.map(u => ((u._id?.$oid||u._id) == currentUserId ? upd : u));
       renderTable(); updatePagination();
+      loader.style.display = 'none';
       showToast('User updated!', 'success');
     } catch (err) {
       showToast(err.message, 'error');
@@ -440,16 +483,21 @@ function showToast(msg, type = 'success') {
     e.preventDefault();
     const role = e.target.role.value;
     try {
+      loader.style.display = 'block';
       const res = await fetch(`https://luxury-stay-lyart.vercel.app/usermanagement/${currentUserId}`, {
         method: 'PUT',
         headers: {'Content-Type':'application/json'},
         body: JSON.stringify({ role }),
       });
-      if (!res.ok) throw new Error('Role update failed');
+      if (!res.ok) {
+        loader.style.display = 'none';
+        throw new Error('Role update failed')
+      };
       const upd = await res.json();
       users = users.map(u => ((u._id?.$oid||u._id) == currentUserId ? upd : u));
       filtered = filtered.map(u => ((u._id?.$oid||u._id) == currentUserId ? upd : u));
       renderTable(); updatePagination();
+      loader.style.display = 'none';
       showToast('Role updated!', 'success');
     } catch (err) {
       showToast(err.message, 'error');
@@ -465,12 +513,17 @@ function showToast(msg, type = 'success') {
   }
   document.getElementById('confirmDeleteBtn').onclick = async () => {
     try {
+      loader.style.display = 'block';
       const res = await fetch(`https://luxury-stay-lyart.vercel.app/usermanagement/${currentUserId}`, { method: 'DELETE' });
-      if (!res.ok) throw new Error('Delete failed');
+      if (!res.ok) {
+        loader.style.display = 'none';
+        throw new Error('Delete failed')
+      };
       await res.json();
       users = users.filter(u => (u._id?.$oid||u._id) != currentUserId);
       filtered = filtered.filter(u => (u._id?.$oid||u._id) != currentUserId);
       renderTable(); updatePagination();
+      loader.style.display = 'none';
       showToast('User deleted!', 'success');
     } catch (err) {
       showToast(err.message, 'error');
@@ -493,12 +546,14 @@ document.getElementById('createForm').onsubmit = async e => {
   };
 
   try {
+    loader.style.display = 'block';
     const res = await fetch('/api/auth/register', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify(data)
     });
     if (!res.ok) {
+      loader.style.display = 'none';
       const err = await res.text();
       throw new Error(err || 'Create failed');
     }
@@ -509,6 +564,7 @@ document.getElementById('createForm').onsubmit = async e => {
     document.getElementById('userBadge').textContent = users.length;
     renderTable();
     updatePagination();
+    loader.style.display = 'none';
     showToast('User created!', 'success');
   } catch (err) {
     showToast(err.message, 'error');
