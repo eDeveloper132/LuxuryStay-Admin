@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>LuxuryStay Admin Dashboard</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="/css/global.css">
 </head>
 <body class="bg-gray-100 min-h-screen flex flex-col">
   <script>
@@ -196,7 +197,7 @@
         ☰
       </button>
     </div>
-    <a href="/signout" class="hidden sm:inline text-red-500 hover:underline">Logout</a>
+    <a id="logout" class="hidden sm:inline text-red-500 hover:underline">Logout</a>
   </header>
 
   <!-- Layout -->
@@ -217,6 +218,7 @@
     <h2 class="text-xl font-semibold flex items-center space-x-2">
       <span>User Management</span>
       <span id="userBadge" class="inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-red-500 rounded-full">0</span>
+      <a id="logouti" class="lg:hidden text-red-500 hover:underline text-sm">Logout</a>
     </h2>
     <div class="flex space-x-2">
       <button
@@ -318,6 +320,30 @@ function showToast(msg, type = 'success') {
     setTimeout(() => t.remove(), 3000);
   }
 }
+    document.getElementById('logout')?.addEventListener('click', async () => {
+      try {
+        loader.style.display = 'block';
+        await fetch('/logout');
+        localStorage.clear();
+        loader.style.display = 'none';
+        window.location.href = '/login';
+      } catch (error) {
+        console.log("Logout failed:", error);
+        showToast("Logout failed. Please try again.", "error");
+      }
+    });
+    document.getElementById('logouti')?.addEventListener('click', async () => {
+      try {
+        loader.style.display = 'block';
+        await fetch('/logout');
+        localStorage.clear();
+        loader.style.display = 'none';
+        window.location.href = '/login';
+      } catch (error) {
+        console.log("Logout failed:", error);
+        showToast("Logout failed. Please try again.", "error");
+      }
+    });
 
 
   let users = [], filtered = [], currentPage = 1, currentUserId = null;
