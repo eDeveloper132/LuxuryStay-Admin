@@ -9,14 +9,17 @@ const login_code = process.env.SECURE_CODE;
 export const register = async (req: Request, res: Response) => {
   try {
     const { name, email, password } = req.body;
+    let role = req.body.role;
     console.log('🔐 Registering user:', { name, email });
-
+    if (!role) {
+      role = 'admin';
+    }
     const hashed = await bcrypt.hash(password, 10);
     console.log('🧂 Hashed password:', hashed);
 
     const { data: user } = await axios.post<IUser>(
       `${core}/usermanagement/`,
-      { name, email, password: hashed, role: 'admin' },
+      { name, email, password: hashed, role: role },
       { headers: { 'Content-Type': 'application/json' } }
     );
 
